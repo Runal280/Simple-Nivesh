@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Form</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <style>
+    /* Style for the logo image */
+    img.logo {
+      position: absolute;
+      top: 35px;
+      left: 60px;
+      width: 150px;
+      height: 120px;
+    }
+
+  </style>
+  <nav class="navbar">
+    <ul class="nav-links">
+      <li><a href="#">Home</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Services</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+    <div class="burger">
+      <div class="line1"></div>
+      <div class="line2"></div>
+      <div class="line3"></div>
+    </div>
+  </nav>
+</head>
+<body>
+  <img src="logo.png" alt="Company Logo" class="logo">
+  
+  <div class="wrapper">
+    <form id="loginForm" action="">
+      <h1>Login</h1>
+      <div class="input-box">
+        <input type="text" placeholder="Username" required>
+        <i class='bx bxs-user'></i>
+      </div>
+      <div class="input-box">
+        <input type="password" placeholder="Password" required>
+        <i class='bx bxs-lock-alt' ></i>
+      </div>
+      <div class="remember-forgot">
+        <label><input type="checkbox">Remember Me</label>
+        <a href="forgot.html">Forgot Password</a>
+      </div>
+      <button type="submit" class="btn">Login</button>
+      <div class="register-link">
+        <p>Don't have an account? <a href="registration_form.html">Register</a></p>
+      </div>
+    </form>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+      // Prevent the default form submission behavior
+      event.preventDefault();
+
+      const navSlide = () => {
+        const burger = document.querySelector('.burger');
+        const nav = document.querySelector('.nav-links');
+
+        burger.addEventListener('click', () => {
+          nav.classList.toggle('active');
+        });
+      }
+
+      navSlide();
+
+
+      // Redirect to a new page (replace 'newpage.html' with your desired page)
+      window.location.href = "search.html";
+    });
+  </script>
+</body>
+</html>

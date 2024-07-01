@@ -1,0 +1,242 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Stock Search | Beautiful and Animated</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif, Arial;
+        }
+        body{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: url(bg.jpg) no-repeat;
+        background-size: cover;
+        background-position: center;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: width 0.7s ease, box-shadow 0.7s ease;
+        }
+
+        .search-input {
+            border: none;
+            outline: none;
+            padding: 15px;
+            width: 0;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            transition: width 0.7s ease, font-size 0.7s ease, color 0.7s ease;
+        }
+
+        .search-icon {
+            color: #3498db;
+            font-size: 24px;
+            margin: 0 15px;
+            cursor: pointer;
+            transition: color 0.7s ease;
+        }
+
+        .search-bar:hover {
+            width: 300px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-bar:hover .search-input {
+            width: 100%;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .search-bar:hover .search-icon {
+            color: #2980b9;
+        }
+
+        #suggestions {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            display: none;
+        }
+
+        #suggestions .suggestion {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        #suggestions .suggestion:hover {
+            background-color: #f2f2f2;
+        }
+
+        .logo {
+            position: absolute;
+            top: 30px;
+            left: -1090px;
+            width: 150px;
+            height: 120px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #33333300;
+            color: #fff;
+            position: absolute;
+            top: 5px;
+            left: 1150px;
+            width: 10px;
+            height: 90px;
+        }
+
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+        }
+
+        .nav-links li {
+            margin-right: 20px;
+        }
+
+        .nav-links li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .burger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .line1, .line2, .line3 {
+            width: 25px;
+            height: 3px;
+            background-color: #fff;
+            margin: 5px;
+        }
+
+        @media screen and (max-width: 768px) {
+        .nav-links {
+            display: none;
+        }
+
+        .burger {
+            display: flex;
+        }
+
+        .navbar.active .nav-links {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        }
+
+    </style>
+    <nav class="navbar">
+        <img class="logo" src="logo.png" alt="Logo">
+        <ul class="nav-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">Contact</a></li>
+        </ul>
+        <div class="burger">
+        <div class="line1"></div>
+        <div class="line2"></div>
+        <div class="line3"></div>
+        </div>
+    </nav>
+</head>
+<body>
+    <div class="search-container">
+        <div class="search-bar">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search for a stock...">
+            <i id="searchButton" class="fas fa-search search-icon"></i>
+        </div>
+        <div id="suggestions"></div>
+    </div>
+    
+    <!-- Container to display the chart -->
+    <div id="chartContainer"></div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // List of predefined stock suggestions
+            var stockSuggestions = [
+                "TATAMOTORS.NS", "RELIANCE.NS", "TATASTEEL.NS", "MSUMI.NS", "ADANIENT.NS", "ADANIGREEN.NS", "WIPRO.NS", "ONGC.NS", "YESBANK.NS", "HDFCBANK.NS"
+            ];
+
+            $('#searchInput').on('input', function () {
+                var query = $(this).val().toUpperCase();
+                if (query.length > 0) {
+                    var filteredSuggestions = stockSuggestions.filter(function (suggestion) {
+                        return suggestion.startsWith(query);
+                    });
+                    displaySuggestions(filteredSuggestions);
+                } else {
+                    $('#suggestions').empty().hide();
+                }
+            });
+
+            function displaySuggestions(suggestions) {
+                $('#suggestions').empty().show();
+                suggestions.forEach(function (suggestion) {
+                    $('#suggestions').append('<div class="suggestion">' + suggestion + '</div>');
+                });
+            }
+
+            $(document).on('click', '.suggestion', function () {
+                var selectedSuggestion = $(this).text();
+                $('#searchInput').val(selectedSuggestion);
+                $('#suggestions').empty().hide();
+
+                // Make an AJAX request to fetch the pie chart for the selected stock symbol
+                $.ajax({
+                    url: '/get_chart',
+                    type: 'GET',
+                    data: {symbol: selectedSuggestion},
+                    success: function(chart_url) {
+                        // Update the DOM with the returned chart image
+                        $('#chartContainer').html('<img src="data:image/png;base64,' + chart_url + '">');
+                    }
+                });
+
+                // Redirect or do something else with the selected suggestion
+                // window.location.href = "https://finance.yahoo.com/quote/" + selectedSuggestion;
+            });
+
+            // Function to handle search
+            $('#searchButton').on('click', function () {
+                var searchTerm = $('#searchInput').val();
+                window.location.href = "http://127.0.0.1:5000/";
+            });
+        });
+    </script>
+</body>
+</html>
